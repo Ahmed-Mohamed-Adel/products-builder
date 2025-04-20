@@ -10,7 +10,7 @@ const ProductCard = ({ product }) => {
       <Image
         imageURL={imageURL}
         alt={"product name"}
-        className="rounded-md h-52 w-full lg:object-cover"
+        className="rounded-md h-52 w-[312px] md:w-full lg:object-cover"
       />
 
       <h3 className="text-lg font-semibold">{txtSlicer(title, 25)}</h3>
