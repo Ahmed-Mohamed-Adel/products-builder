@@ -9,7 +9,9 @@ export const productValidation = (product) => {
     price: "",
   };
 
-  const vaildUrl = /^(ftp|http|https)\/\/[^ "]+$/.test(product.imageURL);
+  // const vaildUrl = /^(ftp|http|https)\/\/[^ "]+$/.test(product.imageURL);
+
+  const vaildUrl = product.imageURL.startsWith("http");
 
   if (
     !product.title.trim() ||

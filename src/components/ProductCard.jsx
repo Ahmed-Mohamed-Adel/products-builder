@@ -1,9 +1,15 @@
 import { txtSlicer } from "../utils/functions";
 import Image from "./Image";
 import Button from "./ui/Button";
+import CicleColor from "./ui/CicleColor";
 
 const ProductCard = ({ product }) => {
-  const { title, imageURL, description, price, category } = product;
+  const { title, imageURL, description, price, colors, category } = product;
+
+  /* ------- Render -------  */
+  const renderProductColors = colors.map((color) => {
+    return <CicleColor key={color} color={color} />;
+  });
 
   return (
     <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border border-gray-300 rounded-md p-2 flex flex-col">
@@ -18,14 +24,12 @@ const ProductCard = ({ product }) => {
         {txtSlicer(description)}
       </p>
 
-      <div className="flex items-center space-x-2 my-4">
-        <span className="w-5 h-5 bg-indigo-600 rounded-full cursor-pointer" />
-        <span className="w-5 h-5 bg-yellow-600 rounded-full cursor-pointer" />
-        <span className="w-5 h-5 bg-red-600 rounded-full cursor-pointer" />
+      <div className="flex items-center space-x-2 my-2">
+        {renderProductColors}
       </div>
 
       <div className="flex justify-between items-center">
-        <span>${price}</span>
+        <span className="text-lg text-indigo-600 font-semibold">${price}</span>
 
         <Image
           imageURL={category.imageURL}
