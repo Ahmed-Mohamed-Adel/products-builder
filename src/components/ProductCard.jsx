@@ -3,13 +3,20 @@ import Image from "./Image";
 import Button from "./ui/Button";
 import CicleColor from "./ui/CicleColor";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, setProductToEdit, openEditModal }) => {
   const { title, imageURL, description, price, colors, category } = product;
 
   /* ------- Render -------  */
   const renderProductColors = colors.map((color) => {
     return <CicleColor key={color} color={color} />;
   });
+
+  /* ------- Handler------  */
+  const onEdit = () => {
+    setProductToEdit(product);
+    console.log(product);
+    openEditModal();
+  };
 
   return (
     <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border border-gray-300 rounded-md p-2 flex flex-col">
@@ -39,7 +46,9 @@ const ProductCard = ({ product }) => {
       </div>
 
       <div className="flex justify-between items-center space-x-2 mt-5">
-        <Button className="bg-indigo-600">EDIT</Button>
+        <Button className="bg-indigo-600" onClick={onEdit}>
+          EDIT
+        </Button>
         <Button className="bg-red-600">DELETE</Button>
       </div>
     </div>

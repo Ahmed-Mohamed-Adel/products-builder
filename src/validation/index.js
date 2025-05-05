@@ -1,4 +1,4 @@
-// ** productObj === errorsObj (TITLE, DESCRIPTION, IMAGE, PRICE)
+// ** productObj === errorsObj (TITLE, DESCRIPTION, IMAGE, PRICE, COLORS)
 
 export const productValidation = (product) => {
   // ** Returns an Object
@@ -7,6 +7,7 @@ export const productValidation = (product) => {
     description: "",
     imageURL: "",
     price: "",
+    colors: "",
   };
 
   // const vaildUrl = /^(ftp|http|https)\/\/[^ "]+$/.test(product.imageURL);
@@ -35,6 +36,11 @@ export const productValidation = (product) => {
   }
   if (!product.price.trim() || isNaN(Number(product.price))) {
     errors.price = "Valid price is requied!";
+  }
+
+  if (product.colors.length === 0) {
+    errors.colors = "Colors are required!";
+    console.log("Colors are required!");
   }
 
   return errors;
