@@ -27,6 +27,7 @@ const App = () => {
   const [products, setProducts] = useState(productList);
   const [product, setProduct] = useState(defaultProductObj);
   const [productToEdit, setProductToEdit] = useState(defaultProductObj);
+  const [productToEditIdx, setProductToEditIdx] = useState(0);
   const [errors, setErrors] = useState({
     title: "",
     description: "",
@@ -74,8 +75,8 @@ const App = () => {
   };
 
   const onCancel = () => {
-    setProduct(defaultProductObj);
-    close();
+    setProductToEdit(defaultProductObj);
+    closeEditModal();
   };
 
   const submitHandler = () => {
@@ -117,14 +118,16 @@ const App = () => {
   const submitEditHandler = () => {
     event.preventDefault();
 
-    const { title, description, imageURL, price } = productToEdit;
+    const { title, description, imageURL, price, colors } = productToEdit;
+
+    const updatedColors = tempColors.concat(productToEdit.colors);
 
     const errors = productValidation({
       title,
       description,
       imageURL,
       price,
-      colors: tempColors,
+      colors: updatedColors,
     });
 
     // ** Check if any property has a value of "" && Check if All Properties have a value of ""
@@ -137,19 +140,29 @@ const App = () => {
       return;
     }
 
+    const updatedProducts = [...products];
+    updatedProducts[productToEditIdx] = {
+      ...productToEdit,
+      colors: updatedColors,
+    };
+    console.log(tempColors.concat(productToEdit.colors));
+    setProducts(updatedProducts);
+
     setProductToEdit(defaultProductObj);
     setTempColors([]);
-    close();
+    closeEditModal();
   };
 
   /* ------- Render -------  */
-  const renderProductList = products.map((product) => {
+  const renderProductList = products.map((product, idx) => {
     return (
       <ProductCard
         key={product.id}
         product={product}
         setProductToEdit={setProductToEdit}
         openEditModal={openEditModal}
+        setProductToEditIdx={setProductToEditIdx}
+        idx={idx}
       />
     );
   });
@@ -206,6 +219,9 @@ const App = () => {
 
           if (tempColors.includes(color)) {
             updatedColors = tempColors.filter((item) => item !== color);
+          }
+          if (productToEdit.colors.includes(color)) {
+            updatedColors = tempColors.filter((item) => item !== color);
           } else {
             updatedColors = [...tempColors, color];
           }
@@ -215,12 +231,6 @@ const App = () => {
           if (updatedColors.length > 0) {
             setErrors({ ...errors, colors: "" });
           }
-          // if (tempColors.includes(color)) {
-          //   setTempColors((prev) => prev.filter((item) => item !== color));
-          //   setErrors({ ...errors, colors: "" });
-          //   return;
-          // }
-          // setTempColors((prev) => [...prev, color]);
         }}
       />
     );
@@ -296,17 +306,22 @@ const App = () => {
             "imageURL"
           )}
           {renderProductEditWithErrorMsg("price", "Product Price", "price")}
-          {/* <Select
-            selected={selectedCategory}
-            setSelected={setSelectedCategory}
-          /> */}
+          <Select
+            selected={productToEdit.category}
+            setSelected={(value) => {
+              setProductToEdit({
+                ...productToEdit,
+                category: value,
+              });
+            }}
+          />
 
-          {/* <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1">
             {renderProductColors}
           </div>
           <ErrorMessage msg={errors.colors} />
           <div className="flex items-center flex-wrap space-x-1">
-            {tempColors.map((color) => (
+            {tempColors.concat(productToEdit.colors).map((color) => (
               <span
                 key={color}
                 className="p-1 mr-1 mb-1 text-sm rounded-md text-white"
@@ -315,7 +330,7 @@ const App = () => {
                 {color}
               </span>
             ))}
-          </div> */}
+          </div>
 
           <div className="flex items-center space-x-3">
             <Button className="bg-indigo-700 hover:bg-indigo-800">

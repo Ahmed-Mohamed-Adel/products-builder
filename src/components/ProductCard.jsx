@@ -3,7 +3,13 @@ import Image from "./Image";
 import Button from "./ui/Button";
 import CicleColor from "./ui/CicleColor";
 
-const ProductCard = ({ product, setProductToEdit, openEditModal }) => {
+const ProductCard = ({
+  product,
+  setProductToEdit,
+  openEditModal,
+  idx,
+  setProductToEditIdx,
+}) => {
   const { title, imageURL, description, price, colors, category } = product;
 
   /* ------- Render -------  */
@@ -16,6 +22,7 @@ const ProductCard = ({ product, setProductToEdit, openEditModal }) => {
     setProductToEdit(product);
     console.log(product);
     openEditModal();
+    setProductToEditIdx(idx);
   };
 
   return (
