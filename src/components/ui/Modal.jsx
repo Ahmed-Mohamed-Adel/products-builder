@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 
-const Modal = ({ isOpen, close, title, children }) => {
+const Modal = ({ isOpen, close, title, children, description }) => {
   return (
     <>
       <Dialog
@@ -24,6 +24,9 @@ const Modal = ({ isOpen, close, title, children }) => {
                 <DialogTitle as="h3" className="text-base/7 font-medium ">
                   {title}
                 </DialogTitle>
+              )}
+              {description && (
+                <p className="text-sm text-gray-500 mt-3">{description}</p>
               )}
               <div className="mt-4">{children}</div>
             </DialogPanel>

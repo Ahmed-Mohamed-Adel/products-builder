@@ -9,6 +9,7 @@ const ProductCard = ({
   openEditModal,
   idx,
   setProductToEditIdx,
+  openConfirmModal,
 }) => {
   const { title, imageURL, description, price, colors, category } = product;
 
@@ -23,6 +24,11 @@ const ProductCard = ({
     console.log(product);
     openEditModal();
     setProductToEditIdx(idx);
+  };
+
+  const onRemove = () => {
+    setProductToEdit(product);
+    openConfirmModal();
   };
 
   return (
@@ -42,21 +48,37 @@ const ProductCard = ({
         {renderProductColors}
       </div>
 
+      <div className="flex items-center flex-wrap space-x-1">
+        {!colors.length ? (
+          <p className="min-h-[20px]">Not available colors</p>
+        ) : (
+          renderProductColors
+        )}
+      </div>
+
       <div className="flex justify-between items-center">
         <span className="text-lg text-indigo-600 font-semibold">${price}</span>
 
-        <Image
-          imageURL={category.imageURL}
-          alt={category.name}
-          className="w-10 h-10 rounded-full object-bottom"
-        />
+        <div className="flex justify-between items-center space-x-3">
+          <span className="text-lg text-indigo-600 font-semibold">
+            {category.name}
+          </span>
+
+          <Image
+            imageURL={category.imageURL}
+            alt={category.name}
+            className="w-10 h-10 rounded-full object-bottom"
+          />
+        </div>
       </div>
 
       <div className="flex justify-between items-center space-x-2 mt-5">
         <Button className="bg-indigo-600" onClick={onEdit}>
           EDIT
         </Button>
-        <Button className="bg-red-600">DELETE</Button>
+        <Button onClick={onRemove} className="bg-red-600">
+          Remove
+        </Button>
       </div>
     </div>
   );

@@ -9,6 +9,7 @@ import ErrorMessage from "./components/ErrorMessage";
 import CicleColor from "./components/ui/CicleColor";
 import { v4 as uuidv4 } from "uuid";
 import Select from "./components/ui/Select";
+import toast, { Toaster } from "react-hot-toast";
 
 const App = () => {
   const defaultProductObj = {
@@ -38,6 +39,7 @@ const App = () => {
   const [tempColors, setTempColors] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
   /* ------- Handler -------  */
@@ -46,6 +48,9 @@ const App = () => {
 
   const openEditModal = () => setIsOpenEditModal(true);
   const closeEditModal = () => setIsOpenEditModal(false);
+
+  const openConfirmModal = () => setIsOpenConfirmModal(true);
+  const closeConfirmModal = () => setIsOpenConfirmModal(false);
 
   const onChangeHandler = () => {
     const { value, name } = event.target;
@@ -77,6 +82,22 @@ const App = () => {
   const onCancel = () => {
     setProductToEdit(defaultProductObj);
     closeEditModal();
+  };
+  const removeProductHandler = () => {
+    console.log("Product Id", productToEdit.id);
+    const filtered = products.filter(
+      (product) => product.id != productToEdit.id
+    );
+
+    setProducts(filtered);
+    closeConfirmModal();
+    toast("Product has been deleted", {
+      icon: "👏",
+      style: {
+        backgroundColor: "black",
+        color: "white",
+      },
+    });
   };
 
   const submitHandler = () => {
@@ -114,6 +135,13 @@ const App = () => {
     setProduct(defaultProductObj);
     setTempColors([]);
     close();
+    toast("Product has been Added", {
+      icon: "👏",
+      style: {
+        backgroundColor: "black",
+        color: "white",
+      },
+    });
   };
   const submitEditHandler = () => {
     event.preventDefault();
@@ -151,6 +179,13 @@ const App = () => {
     setProductToEdit(defaultProductObj);
     setTempColors([]);
     closeEditModal();
+    toast("Product has been Updated", {
+      icon: "👏",
+      style: {
+        backgroundColor: "black",
+        color: "white",
+      },
+    });
   };
 
   /* ------- Render -------  */
@@ -163,6 +198,7 @@ const App = () => {
         openEditModal={openEditModal}
         setProductToEditIdx={setProductToEditIdx}
         idx={idx}
+        openConfirmModal={openConfirmModal}
       />
     );
   });
@@ -243,7 +279,7 @@ const App = () => {
         width="fit"
         onClick={open}
       >
-        Build Product
+        Build a Product
       </Button>
       <div className=" m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 p-5 gap-2 md:gap-4 rounded-md">
         {renderProductList}
@@ -278,8 +314,9 @@ const App = () => {
               Submit
             </Button>
             <Button
-              className="bg-gray-400 hover:bg-gray-500"
+              className="bg-[#f5f5fa] hover:bg-gray-300"
               onClick={onCancel}
+              style={{ color: "black" }}
             >
               Cancel
             </Button>
@@ -345,6 +382,30 @@ const App = () => {
           </div>
         </form>
       </Modal>
+      {/* DELETE PRODUCT CONFIRM MODAL */}
+      <Modal
+        isOpen={isOpenConfirmModal}
+        close={closeEditModal}
+        title="Are you sure you want to remove this product from ypur Store?"
+        description="Deleting this product will remove it permanently from your inventory. Any associated data, sales history and other related information will also be deleted. Please make sure this is the intended action"
+      >
+        <div className="flex items-center space-x-3">
+          <Button
+            className="bg-[#c2344d] hover:bg-red-800"
+            onClick={removeProductHandler}
+          >
+            Yes, remove
+          </Button>
+          <Button
+            className=" bg-[#f5f5fa] hover:bg-gray-300"
+            onClick={closeConfirmModal}
+            style={{ color: "black" }}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Modal>
+      <Toaster />
     </main>
   );
 };
